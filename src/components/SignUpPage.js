@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import styled from "styled-components";
 
 import Logo from './Logo';
@@ -7,10 +9,23 @@ import SubmitButton from './SubmitButton';
 import StyledText from './StyledText';
 
 export default function SignUpPage() {
+    const [userInputs, setUserInputs] = useState({
+        username: '',
+        email: '',
+        password: '',
+        repeat_password: ''
+    });
+    const navigate = useNavigate();
 
-    function register(e) {
+    async function register(e) {
         e.preventDefault();
-        console.log('cadastrou!');
+        
+        try {
+            await axios.post('http://localhost:5000/sign-up', userInputs);
+            navigate('/');
+        } catch(err) {
+            console.log(err.response.data);
+        }
     }
 
     return (
@@ -18,10 +33,26 @@ export default function SignUpPage() {
             <Logo />
 
             <form onSubmit={register}>
-                <Input type='text' placeholder='Nome' />
-                <Input type='email' placeholder='E-mail' />
-                <Input type='password' placeholder='Senha' />
-                <Input type='password' placeholder='Confirme a senha' />
+                <Input type='text' placeholder='Nome' required
+                    value={userInputs.username}
+                    onChange={e => setUserInputs({...userInputs, username: e.target.value})}
+                />
+
+                <Input type='email' placeholder='E-mail' required
+                    value={userInputs.email}
+                    onChange={e => setUserInputs({...userInputs, email: e.target.value})}
+                />
+
+                <Input type='password' placeholder='Senha' required
+                    value={userInputs.password}
+                    onChange={e => setUserInputs({...userInputs, password: e.target.value})}
+                />
+
+                <Input type='password' placeholder='Confirme a senha' required
+                    value={userInputs.repeat_password}
+                    onChange={e => setUserInputs({...userInputs, repeat_password: e.target.value})}
+                />
+
                 <SubmitButton type='submit'>Cadastrar</SubmitButton>
             </form>
 
