@@ -16,7 +16,7 @@ export default function SignInPage() {
         password: ''
     });
     const navigate = useNavigate();
-    const { user, setUser } = useContext(UserContext);
+    const { setUser } = useContext(UserContext);
     
     async function login(e) {
         e.preventDefault();

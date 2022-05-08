@@ -5,17 +5,67 @@ import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from 'react-icons/ai';
 import { IconContext } from 'react-icons';
 
+import UserContext from '../contexts/UserContext';
+
 export default function HomePage() {
+    const { user } = useContext(UserContext);
+    const [transactions, setTransactions] = useState([]);
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${user.token}`
+        }
+    }
+
+    const [total, setTotal] = useState(0);
+    function calculateBalance(data) {
+        let sum = 0;
+        data.forEach(elem => {
+            if (elem.type === 'income') sum += elem.value;
+                else sum -= elem.value;
+        });
+        return sum;
+    }
+    
+    useEffect(() => {
+        async function getData() {
+            try {
+                const { data } = await axios.get('http://localhost:5000/home', config);
+                setTransactions(data);
+                setTotal(() => calculateBalance(data));
+            } catch(err) {
+                console.log(err.response.data);
+            }
+        }
+        getData();
+    }, []);
+    
     return (
     <IconContext.Provider value={{ color: "#fff", size: "24px" }}>
         <Container>
             <Header>
-                <h2>Olá, fulano</h2>
+                <h2>Olá, {user.name}</h2>
                 <RiLogoutBoxRLine />
             </Header>
 
             <Box>
-                <p>Não há registros de<br />entrada ou saída</p>
+                {transactions.length !== 0 ?
+                <>
+                    <ul>
+                        {transactions.map((elem, i) =>
+                            <Transaction key={i}>
+                                <span>{elem.date}</span>
+                                <div>
+                                    <p>{elem.description}</p>
+                                    <Value type={elem.type}>{elem.value.toFixed(2)}</Value>
+                                </div>
+                            </Transaction>)}
+                    </ul>
+                    <Balance>
+                        <p>SALDO</p>
+                        <Total total={total}>{total.toFixed(2)}</Total>
+                    </Balance>
+                </>
+                : <Message>Não há registros de<br />entrada ou saída</Message>}
             </Box>
 
             <ButtonWrapper>
@@ -62,18 +112,66 @@ const Box = styled.div`
     height: 100%;
     border-radius: 5px;
     background-color: #fff;
-    padding: 20px 12px 0;
+    padding: 20px 12px 10px;
     margin-bottom: 14px;
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    ul {
+        width: 100%;
+    }
+`;
+
+const Message = styled.p`
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 23.48px;
+    color: #868686;
+    margin: auto;
+    text-align: center;
+`;
+
+const Transaction = styled.li`
+    width: 100%;
+    font-size: 16px;
+    font-weight: 400;
+    color: #000;
+    line-height: 18.78px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+
+    span {
+        color: #C6C6C6;
+    }
+
+    div {
+        width: 80%;
+        display: flex;
+        justify-content: space-between;
+    }
+`;
+
+const Value = styled.p`
+    color: ${props => props.type === 'income' ? '#03AC00' : '#C70000'};
+`;
+
+const Balance = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 
     p {
-        font-size: 20px;
-        font-weight: 400;
-        line-height: 23.48px;
-        color: #868686;
-        margin: auto;
-        text-align: center;
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 20px;
+        color: #000;
     }
+`;
+
+const Total = styled.span`
+    color: ${props => props.total > 0 ? '#03AC00' : '#C70000'};
 `;
 
 const ButtonWrapper = styled.div`

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter, Routes, Route, UNSAFE_RouteContext } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import UserContext from '../contexts/UserContext';
 import SignInPage from './SignInPage';
