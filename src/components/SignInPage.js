@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
+
+import UserContext from '../contexts/UserContext';
 
 import Logo from './Logo';
 import Input from './Input';
@@ -14,13 +16,15 @@ export default function SignInPage() {
         password: ''
     });
     const navigate = useNavigate();
+    const { user, setUser } = useContext(UserContext);
     
     async function login(e) {
         e.preventDefault();
         
         try {
             const { data } = await axios.post('http://localhost:5000/', userInputs);
-            console.log(data);
+            const { name, token } = data;
+            setUser({name, token});
             navigate('/home');
         } catch(err) {
             alert(err.response.data);
