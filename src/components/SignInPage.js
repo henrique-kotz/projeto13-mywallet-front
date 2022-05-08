@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import styled from 'styled-components';
 
 import Logo from './Logo';
@@ -7,10 +9,22 @@ import SubmitButton from './SubmitButton';
 import StyledText from './StyledText';
 
 export default function SignInPage() {
+    const [userInputs, setUserInputs] = useState({
+        email: '',
+        password: ''
+    });
+    const navigate = useNavigate();
     
-    function login(e) {
+    async function login(e) {
         e.preventDefault();
-        console.log('login!');
+        
+        try {
+            const { data } = await axios.post('http://localhost:5000/', userInputs);
+            console.log(data);
+            navigate('/home');
+        } catch(err) {
+            alert(err.response.data);
+        }
     }
 
     return (
@@ -18,9 +32,17 @@ export default function SignInPage() {
             <Logo />
 
             <form onSubmit={login}>
-                <Input type='email' placeholder='E-mail' />
-                <Input type='password' placeholder='Senha' />
-                <SubmitButton>Entrar</SubmitButton>
+                <Input type='email' placeholder='E-mail' required
+                    value={userInputs.email}
+                    onChange={e => setUserInputs({...userInputs, email: e.target.value})}
+                />
+
+                <Input type='password' placeholder='Senha' required
+                    value={userInputs.password}
+                    onChange={e => setUserInputs({...userInputs, password: e.target.value})}
+                />
+
+                <SubmitButton type='submit'>Entrar</SubmitButton>
             </form>
 
             <Link to='/sign-up'>

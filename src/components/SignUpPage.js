@@ -21,10 +21,11 @@ export default function SignUpPage() {
         e.preventDefault();
         
         try {
-            await axios.post('http://localhost:5000/sign-up', userInputs);
+            const { data } = await axios.post('http://localhost:5000/sign-up', userInputs);
+            console.log(data);
             navigate('/');
         } catch(err) {
-            console.log(err.response.data);
+            alert(err.response.data);
         }
     }
 
