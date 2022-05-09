@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
@@ -10,6 +11,7 @@ import UserContext from '../contexts/UserContext';
 export default function HomePage() {
     const { user } = useContext(UserContext);
     const [transactions, setTransactions] = useState([]);
+    const navigate = useNavigate();
     const config = {
         headers: {
             'Authorization': `Bearer ${user.token}`
@@ -69,11 +71,11 @@ export default function HomePage() {
             </Box>
 
             <ButtonWrapper>
-                <Button>
+                <Button onClick={() => navigate('/new-income')}>
                     <AiOutlinePlusCircle />
                     <p>Nova<br />entrada</p>
                 </Button>
-                <Button>
+                <Button onClick={() => navigate('/new-expense')}>
                     <AiOutlineMinusCircle />
                     <p>Nova<br />saída</p>
                 </Button>
@@ -194,6 +196,11 @@ const Button = styled.button`
     flex-direction: column;
     justify-content: space-between;
     color: #fff;
+
+    &:hover {
+        cursor: pointer;
+        filter: brightness(1.1);
+    }
     
     p {
         font-size: 17px;
