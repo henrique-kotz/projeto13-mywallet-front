@@ -22,7 +22,7 @@ export default function SignInPage() {
         e.preventDefault();
         
         try {
-            const { data } = await axios.post('http://localhost:5000/', userInputs);
+            const { data } = await axios.post('http://localhost:5000/sign-in', userInputs);
             const { name, token } = data;
             setUser({name, token});
             navigate('/home');

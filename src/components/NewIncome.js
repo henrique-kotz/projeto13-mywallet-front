@@ -26,11 +26,11 @@ export default function NewIncome() {
         e.preventDefault();
 
         try {
-            await axios.post('http://localhost:5000/new-income', userInputs, config);
+            await axios.post('http://localhost:5000/home/income', userInputs, config);
             alert('Entrada salva com sucesso!');
             navigate('/home');
         } catch(err) {
-            alert(err.response.data);
+            console.log(err.response);
         }
     }
 

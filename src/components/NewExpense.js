@@ -26,11 +26,11 @@ export default function NewExpense() {
         e.preventDefault();
 
         try {
-            await axios.post('http://localhost:5000/new-expense', userInputs, config);
+            await axios.post('http://localhost:5000/home/expense', userInputs, config);
             alert('Saída salva com sucesso!');
             navigate('/home');
         } catch(err) {
-            alert(err.response.data);
+            console.log(err.response);
         }
     }
 

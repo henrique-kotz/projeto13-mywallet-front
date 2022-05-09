@@ -18,7 +18,7 @@ export default function App() {
     <UserContext.Provider value={{user, setUser}}>
         <BrowserRouter>
             <Routes>
-                <Route path='/' element={<SignInPage />} />
+                <Route path='/sign-in' element={<SignInPage />} />
                 <Route path='/sign-up' element={<SignUpPage />} />
                 <Route path='/home' element={<HomePage />} />
                 <Route path='/new-income' element={<NewIncome />} />

@@ -23,7 +23,7 @@ export default function SignUpPage() {
         try {
             const { data } = await axios.post('http://localhost:5000/sign-up', userInputs);
             console.log(data);
-            navigate('/');
+            navigate('/sign-in');
         } catch(err) {
             alert(err.response.data);
         }
@@ -57,7 +57,7 @@ export default function SignUpPage() {
                 <SubmitButton type='submit'>Cadastrar</SubmitButton>
             </form>
 
-            <Link to='/'>
+            <Link to='/sign-in'>
                 <StyledText>Já tem uma conta? Entre agora!</StyledText>
             </Link>
 
